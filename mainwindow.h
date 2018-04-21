@@ -14,7 +14,7 @@
 #include <QItemDelegate>
 #include <QStandardItemModel>
 #include <QtDebug>
-
+#include <QObject>
 
 class MainWindow : public QMainWindow
 {
@@ -36,6 +36,8 @@ public:
     QPushButton *Save;
     // Outer Layer
     QVBoxLayout *mainLayout;
+
+public slots:
     void test();
 };
 

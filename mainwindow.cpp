@@ -15,7 +15,7 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
 {
-    const int numRows = 10;
+ /*   const int numRows = 10;
     const int numColumns = 10;
 
     QStandardItemModel* model = new QStandardItemModel(numRows, numColumns);
@@ -28,7 +28,7 @@ MainWindow::MainWindow(QWidget *parent) :
             model->setItem(row, column, item);
         }
      }
-
+*/
 
 
 
@@ -62,7 +62,7 @@ MainWindow::MainWindow(QWidget *parent) :
     mainLayout->addLayout(vLayout);
     mainLayout->addLayout(bottom);
 
-    table->setModel(model);
+    //table->setModel(model);
     // Create a widget
 
 
@@ -74,7 +74,7 @@ MainWindow::MainWindow(QWidget *parent) :
     // Window title
     parent->setWindowTitle("To Do list");
     QObject::connect(Add, SIGNAL (released()), this, SLOT (test()));
-  //  parent->show();
+
 }
 
 MainWindow::~MainWindow()
@@ -83,7 +83,6 @@ MainWindow::~MainWindow()
 }
 void test()
 {
-    // QByteArray wow1 = ;
        qDebug() << "Test button:";
 }
 

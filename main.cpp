@@ -20,10 +20,6 @@ int main(int argc, char* argv[])
     window->show();
 
 
-    // Display
-//    w->show();
-
-
     // Event loop
     return app.exec();
 }
