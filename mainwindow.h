@@ -2,21 +2,41 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QStandardItem>
+#include <QApplication>
+#include <QPushButton>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
+#include <QRadioButton>
+#include <QCheckBox>
+#include <QDialog>
+#include <QTableView>
+#include <QItemDelegate>
+#include <QStandardItemModel>
+#include <QtDebug>
 
-namespace Ui {
-class MainWindow;
-}
 
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = 0);
+    MainWindow(QWidget *parent = 0);
     ~MainWindow();
-
-private:
-    Ui::MainWindow *ui;
+    QHBoxLayout *hLayout;
+    QRadioButton *all;
+    QRadioButton *Overdue;
+    QRadioButton *Today;
+    QRadioButton *ThisWeek;
+    QCheckBox *NotCompleted;
+    QVBoxLayout *vLayout;
+    QTableView *table;
+    QHBoxLayout *bottom;
+    QPushButton *Add;
+    QPushButton *Save;
+    // Outer Layer
+    QVBoxLayout *mainLayout;
+    void test();
 };
 
 #endif // MAINWINDOW_H
