@@ -31,11 +31,13 @@ public:
     QCheckBox *NotCompleted;
     QVBoxLayout *vLayout;
     QTableView *table;
+    QStandardItemModel* items;
     QHBoxLayout *bottom;
     QPushButton *Add;
     QPushButton *Save;
-    // Outer Layer
-    QVBoxLayout *mainLayout;
+
+
+    QStandardItem* AddItem();
 
 public slots:
     void test();

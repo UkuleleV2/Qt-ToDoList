@@ -15,12 +15,13 @@
 int main(int argc, char* argv[])
 {
     QApplication app(argc, argv);
-    QWidget *window = new QWidget();
-    MainWindow mn = new MainWindow(window);
-    window->show();
+    MainWindow mn;
 
 
     // Event loop
     return app.exec();
 }
 
+/*FORMS += \
+    mainwindow.ui \
+    addoredit.ui*/
