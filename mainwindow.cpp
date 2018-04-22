@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "addoredit.h"
+#include <task.h>
 #include <QApplication>
 #include <QObject>
 #include <QPushButton>
@@ -13,6 +14,7 @@
 #include <QStandardItemModel>
 #include <QtDebug>
 #include <QFile>
+#include <QList>
 
 /*   const int numRows = 10;
    const int numColumns = 10;
@@ -35,7 +37,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     QFile file("C:/test/in.txt");
     if (!file.open(QIODevice::ReadWrite | QIODevice::Text))
-         qDebug() << "Error opening file";
+         qDebug() << "Cannot open file";
     QTextStream in(&file);
     QString line = in.readLine();
     while (!line.isNull()) {
@@ -43,7 +45,9 @@ MainWindow::MainWindow(QWidget *parent) :
         line = in.readLine();
         qDebug() << line;
     }
-
+    Task *ne = new Task();
+ //   Task *we = new Task("Aaa","bbbb","cccc",7);
+ //   qDebug() << we->getDescription();
     items = new QStandardItemModel();
     items->setRowCount(0);
     items->setColumnCount(4);
