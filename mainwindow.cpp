@@ -45,9 +45,7 @@ MainWindow::MainWindow(QWidget *parent) :
         line = in.readLine();
         qDebug() << line;
     }
-    Task *ne = new Task();
- //   Task *we = new Task("Aaa","bbbb","cccc",7);
- //   qDebug() << we->getDescription();
+
     items = new QStandardItemModel();
     items->setRowCount(0);
     items->setColumnCount(4);

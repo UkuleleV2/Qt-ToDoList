@@ -26,13 +26,11 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    addoredit.cpp \
-    task.cpp
+    addoredit.cpp
 
 HEADERS += \
         mainwindow.h \
-    addoredit.h \
-    task.h
+    addoredit.h
 
 FORMS += \
     addoredit.ui
