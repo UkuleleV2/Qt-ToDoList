@@ -26,11 +26,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    addedit.cpp
+    addedit.cpp \
+    task.cpp
 
 HEADERS += \
         mainwindow.h \
-    addedit.h
+    addedit.h \
+    task.h
 
 FORMS += \
     addedit.ui

@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 #include "addedit.h"
+#include "task.h"
 #include <QMainWindow>
 #include <QStandardItem>
 #include <QApplication>
@@ -25,7 +26,7 @@ public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
     QHBoxLayout *hLayout;
-    QRadioButton *all;
+    QRadioButton *All;
     QRadioButton *Overdue;
     QRadioButton *Today;
     QRadioButton *ThisWeek;
@@ -36,18 +37,17 @@ public:
     QHBoxLayout *bottom;
     QPushButton *Add;
     QPushButton *Save;
-    struct Task
-    {
-        int complete;
-        QString title;
-        QString description;
-        QDate date;
-    };
-
+    QList<Task> list;
     QStandardItem* AddItem();
 
 private slots:
-    void test();
+    void AddButton();
+    void SaveButton();
+    void EditRow(QModelIndex d);
+    void AllSelected();
+    void OverdueSelected();
+    void TodaySelected();
+    void ThisWeekSelected();
 
 };
 

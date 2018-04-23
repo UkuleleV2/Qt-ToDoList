@@ -14,51 +14,60 @@
 #include <QFile>
 #include <QList>
 
-/*   const int numRows = 10;
-   const int numColumns = 10;
-
-   QStandardItemModel* model = new QStandardItemModel(numRows, numColumns);
-   for (int row = 0; row < numRows; ++row)
-   {
-       for (int column = 0; column < numColumns; ++column)
-       {
-           QString text = QString('A' + row) + QString::number(column + 1);
-           QStandardItem* item = new QStandardItem(text);
-           model->setItem(row, column, item);
-       }
-    }
-*/
-
-
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
 {
-
-    QFile file("C:/test/in.txt");
-    if (!file.open(QIODevice::ReadWrite | QIODevice::Text))
-         qDebug() << "Cannot open file";
-    QTextStream in(&file);
-    QString line = in.readLine();
-    while (!line.isNull()) {
-      //  process_line(line);
-        line = in.readLine();
-        qDebug() << line;
-    }
-
+    QDate a(1995, 5, 17);
+    QList<Task> list;
+    const Task* lel;
+    lel= new Task();
+    list.append(lel);
+    qDebug() << list[0].getDate();
     items = new QStandardItemModel(0,4);
     items->setHeaderData(0, Qt::Horizontal, QObject::tr("DueDate"));
     items->setHeaderData(1, Qt::Horizontal, QObject::tr("Title"));
     items->setHeaderData(2, Qt::Horizontal, QObject::tr("% complete"));
     items->setHeaderData(3, Qt::Horizontal, QObject::tr("Description"));
+    QFile file("C:/test/in.txt");
+    if (!file.open(QIODevice::ReadWrite | QIODevice::Text))
+         qDebug() << "Cannot open file";
+    QTextStream in(&file);
+    QString line = in.readLine();
+    int i = 0;
+    int row = 0;
+    int our_sign = 0;
+    int next_sign = 0;
+    QString info[6];
+    while (!line.isNull() && line != "") {
+        line = in.readLine();
+        i= 0;
+        our_sign = 0;
+        next_sign = line.indexOf('|', our_sign+1);
+        while (next_sign != -1)
+            {
+                info[i] = line.mid(our_sign+1,next_sign-our_sign-1);
+                our_sign = next_sign;
+                next_sign = line.indexOf('|', our_sign+1);
+                i++;
+            }
+        info[i] = line.mid(our_sign+1);
+        for (int column = 1; column <= 4; ++column)
+        {
+            QStandardItem* item = new QStandardItem(info[column]);
+            items->setItem(row, column-1, item);
+        }
+        row++;
+    }
 
+  //
     // Horizontal layout with 3 buttons
     QHBoxLayout *hLayout = new QHBoxLayout;
-    all = new QRadioButton("All");
+    All = new QRadioButton("All");
     Overdue = new QRadioButton("Overdue");
     Today = new QRadioButton("Today");
     ThisWeek = new QRadioButton("ThisWeek");
     NotCompleted = new QCheckBox("Not Completed");
-    hLayout->addWidget(all);
+    hLayout->addWidget(All);
     hLayout->addWidget(Overdue);
     hLayout->addWidget(Today);
     hLayout->addWidget(ThisWeek);
@@ -76,6 +85,7 @@ MainWindow::MainWindow(QWidget *parent) :
     // Outer Layer
     QVBoxLayout *mainLayout = new QVBoxLayout;
     table->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    table->setSelectionBehavior(QAbstractItemView::SelectRows);
     // Add the previous two inner layouts
     mainLayout->addLayout(hLayout);
     mainLayout->addLayout(vLayout);
@@ -91,23 +101,57 @@ MainWindow::MainWindow(QWidget *parent) :
     // Window title
     window->setWindowTitle("To Do list");
     window->show();
-    QObject::connect(Add, SIGNAL (clicked()), this, SLOT (test()));
-
-
-
-
-
+    QItemSelectionModel *sm = table->selectionModel();
+    QObject::connect(Add, SIGNAL (clicked()), this, SLOT (AddButton()));
+    QObject::connect(sm, SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),
+                this, SLOT(SaveButton()));
+    connect(sm, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(EditRow(QModelIndex)));
+    QObject::connect(All, SIGNAL (clicked()), this, SLOT (AllSelected()));
+    QObject::connect(Overdue, SIGNAL (clicked()), this, SLOT (OverdueSelected()));
+    QObject::connect(Today, SIGNAL (clicked()), this, SLOT (TodaySelected()));
+    QObject::connect(ThisWeek, SIGNAL (clicked()), this, SLOT (ThisWeekSelected()));
+  //  all->isEnabled()
+    All->click();
     file.close();
 }
-void MainWindow::test()
+void MainWindow::AddButton()
 {
-    qDebug() << "Test button:";
+    qDebug() << "Add button:";
     AddEdit* addpoint = new AddEdit(this);
     addpoint->show();
 }
+void MainWindow::SaveButton()
+{
+    qDebug() << "Save button:";
+}
+void MainWindow::EditRow(QModelIndex d)
+{
+    qDebug() << "Edit row:";
+    qDebug() << d;
+    AddEdit* addpoint = new AddEdit(this);
+    addpoint->show();
+}
+void MainWindow::AllSelected()
+{
+    qDebug() << "Test:";
+}
+void MainWindow::OverdueSelected()
+{
+qDebug() << items->item(1,1)->text();
+
+}
+void MainWindow::TodaySelected()
+{
+qDebug() << "Test:";
+}
+void MainWindow::ThisWeekSelected()
+{
+qDebug() << "Test:";
+}
+
 MainWindow::~MainWindow()
 {
-
+qDebug() << "Test:";
 }
 
 
