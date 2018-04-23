@@ -1,6 +1,6 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
-
+#include "addedit.h"
 #include <QMainWindow>
 #include <QStandardItem>
 #include <QApplication>
@@ -15,6 +15,7 @@
 #include <QStandardItemModel>
 #include <QtDebug>
 #include <QObject>
+#include <QDate>
 
 class MainWindow : public QMainWindow
 {
@@ -35,12 +36,19 @@ public:
     QHBoxLayout *bottom;
     QPushButton *Add;
     QPushButton *Save;
-
+    struct Task
+    {
+        int complete;
+        QString title;
+        QString description;
+        QDate date;
+    };
 
     QStandardItem* AddItem();
 
-public slots:
+private slots:
     void test();
+
 };
 
 #endif // MAINWINDOW_H

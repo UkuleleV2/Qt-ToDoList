@@ -1,6 +1,4 @@
 #include "mainwindow.h"
-#include "addoredit.h"
-#include <task.h>
 #include <QApplication>
 #include <QObject>
 #include <QPushButton>
@@ -31,6 +29,7 @@
     }
 */
 
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
 {
@@ -46,9 +45,7 @@ MainWindow::MainWindow(QWidget *parent) :
         qDebug() << line;
     }
 
-    items = new QStandardItemModel();
-    items->setRowCount(0);
-    items->setColumnCount(4);
+    items = new QStandardItemModel(0,4);
     items->setHeaderData(0, Qt::Horizontal, QObject::tr("DueDate"));
     items->setHeaderData(1, Qt::Horizontal, QObject::tr("Title"));
     items->setHeaderData(2, Qt::Horizontal, QObject::tr("% complete"));
@@ -94,7 +91,7 @@ MainWindow::MainWindow(QWidget *parent) :
     // Window title
     window->setWindowTitle("To Do list");
     window->show();
-    QObject::connect(Add, SIGNAL (released()), this, SLOT (test()));
+    QObject::connect(Add, SIGNAL (clicked()), this, SLOT (test()));
 
 
 
@@ -104,8 +101,9 @@ MainWindow::MainWindow(QWidget *parent) :
 }
 void MainWindow::test()
 {
-       qDebug() << "Test button:";
-
+    qDebug() << "Test button:";
+    AddEdit* addpoint = new AddEdit(this);
+    addpoint->show();
 }
 MainWindow::~MainWindow()
 {
