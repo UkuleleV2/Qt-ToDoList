@@ -18,11 +18,98 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
 {
     items = new QStandardItemModel(0,4);
-    QFile file("C:/test/in.txt");
+    table = new QTableView;
+    int z = SetFile("C:/test/in.txt");
+    if (z == -1)
+    {
+        qDebug() << "File is not in correct format";
+    }
+    else if( z == 1)
+    {
+        qDebug() << "Cannot open file";
+    }
+
+    this->CreateUI();
+    items->setHeaderData(0, Qt::Horizontal, QObject::tr("DueDate"));
+    items->setHeaderData(1, Qt::Horizontal, QObject::tr("Title"));
+    items->setHeaderData(2, Qt::Horizontal, QObject::tr("% complete"));
+    items->setHeaderData(3, Qt::Horizontal, QObject::tr("Description"));
+    table->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    table->setSelectionBehavior(QAbstractItemView::SelectRows);
+    table->setModel(items);
+
+
+    QItemSelectionModel *sm = table->selectionModel();
+    connect(Add, SIGNAL (clicked()), this, SLOT (AddButton()));
+    connect(sm, SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),
+                this, SLOT(SaveButton()));
+    connect(sm, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(EditRow(QModelIndex)));
+    connect(All, SIGNAL (clicked()), this, SLOT (AllSelected()));
+    connect(Overdue, SIGNAL (clicked()), this, SLOT (OverdueSelected()));
+    connect(Today, SIGNAL (clicked()), this, SLOT (TodaySelected()));
+    connect(ThisWeek, SIGNAL (clicked()), this, SLOT (ThisWeekSelected()));
+    connect(NotCompleted, SIGNAL (clicked()),this, SLOT(NotCompletedCheck()));
+
+  //  all->isEnabled()
+    All->click();
+//    file.close();
+}
+void MainWindow::CreateUI()
+{
+    // Horizontal layout with 3 buttons
+    QHBoxLayout *hLayout = new QHBoxLayout;
+    All = new QRadioButton("All");
+    Overdue = new QRadioButton("Overdue");
+    Today = new QRadioButton("Today");
+    ThisWeek = new QRadioButton("ThisWeek");
+    NotCompleted = new QCheckBox("Not Completed");
+    hLayout->addWidget(All);
+    hLayout->addWidget(Overdue);
+    hLayout->addWidget(Today);
+    hLayout->addWidget(ThisWeek);
+    hLayout->addWidget(NotCompleted);
+
+    // Vertical layout
+    QVBoxLayout * vLayout = new QVBoxLayout;
+
+    vLayout->addWidget(table);
+    bottom = new QHBoxLayout;
+    Add = new QPushButton("Add");
+    Save = new QPushButton("Save");
+    bottom->addWidget(Add);
+    bottom->addWidget(Save);
+    // Outer Layer
+
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    // Add the previous two inner layouts
+    mainLayout->addLayout(hLayout);
+    mainLayout->addLayout(vLayout);
+    mainLayout->addLayout(bottom);
+    // Create a widget
+
+    QWidget *window = new QWidget();
+    // Set the outer layout as a main layout
+    // of the widget
+    window->setLayout(mainLayout);
+    // Window title
+    window->setWindowTitle("To Do list");
+    window->show();
+}
+int MainWindow::SetFile(QString path)
+{
+    QFile file(path);
     if (!file.open(QIODevice::ReadWrite | QIODevice::Text))
-         qDebug() << "Cannot open file";
+    {
+        qDebug() << "Cannot open file";
+        return 1;
+    }
     QTextStream in(&file);
     QString line = in.readLine();
+    if (line != "TASKLIST^^^")
+    {
+        return -1;
+    }
+    line = in.readLine();
     int i = 0;
     int our_sign = 0;
     int next_sign = 0;
@@ -39,73 +126,12 @@ MainWindow::MainWindow(QWidget *parent) :
                 i++;
             }
         info[i] = line.mid(our_sign+1);
-        qDebug() << info[3];
         QDate date;
         Task* temp = new Task(date.fromString(info[1],"yyyy-MM-dd"),info[2],info[3].toInt(),info[4]);
         list.append(temp);
         line = in.readLine();
     }
-
-    // Horizontal layout with 3 buttons
-    QHBoxLayout *hLayout = new QHBoxLayout;
-    All = new QRadioButton("All");
-    Overdue = new QRadioButton("Overdue");
-    Today = new QRadioButton("Today");
-    ThisWeek = new QRadioButton("ThisWeek");
-    NotCompleted = new QCheckBox("Not Completed");
-    hLayout->addWidget(All);
-    hLayout->addWidget(Overdue);
-    hLayout->addWidget(Today);
-    hLayout->addWidget(ThisWeek);
-    hLayout->addWidget(NotCompleted);
-
-    // Vertical layout
-    QVBoxLayout * vLayout = new QVBoxLayout;
-    table = new QTableView;
-    vLayout->addWidget(table);
-    bottom = new QHBoxLayout;
-    Add = new QPushButton("Add");
-    Save = new QPushButton("Save");
-    bottom->addWidget(Add);
-    bottom->addWidget(Save);
-    // Outer Layer
-
-    QVBoxLayout *mainLayout = new QVBoxLayout;
-    // Add the previous two inner layouts
-    mainLayout->addLayout(hLayout);
-    mainLayout->addLayout(vLayout);
-    mainLayout->addLayout(bottom);
-    items->setHeaderData(0, Qt::Horizontal, QObject::tr("DueDate"));
-    items->setHeaderData(1, Qt::Horizontal, QObject::tr("Title"));
-    items->setHeaderData(2, Qt::Horizontal, QObject::tr("% complete"));
-    items->setHeaderData(3, Qt::Horizontal, QObject::tr("Description"));
-    table->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    table->setSelectionBehavior(QAbstractItemView::SelectRows);
-    table->setModel(items);
-
-    // Create a widget
-
-    QWidget *window = new QWidget();
-    // Set the outer layout as a main layout
-    // of the widget
-    window->setLayout(mainLayout);
-    // Window title
-    window->setWindowTitle("To Do list");
-    window->show();
-    QItemSelectionModel *sm = table->selectionModel();
-    connect(Add, SIGNAL (clicked()), this, SLOT (AddButton()));
-    connect(sm, SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),
-                this, SLOT(SaveButton()));
-    connect(sm, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(EditRow(QModelIndex)));
-    connect(All, SIGNAL (clicked()), this, SLOT (AllSelected()));
-    connect(Overdue, SIGNAL (clicked()), this, SLOT (OverdueSelected()));
-    connect(Today, SIGNAL (clicked()), this, SLOT (TodaySelected()));
-    connect(ThisWeek, SIGNAL (clicked()), this, SLOT (ThisWeekSelected()));
-    connect(NotCompleted, SIGNAL (clicked()),this, SLOT(NotCompletedCheck()));
-
-  //  all->isEnabled()
-    All->click();
-    file.close();
+    return 0;
 }
 void MainWindow::AddButton()
 {
@@ -146,14 +172,7 @@ void MainWindow::AllSelected()
         {
             if (list[i]->getComplete()<100)
             {
-                QStandardItem* date = new QStandardItem(list[i]->getDateString());
-                QStandardItem* title = new QStandardItem(list[i]->getTitle());
-                QStandardItem* complete = new QStandardItem(list[i]->getCompleteString());
-                QStandardItem* description = new QStandardItem(list[i]->getDescription());
-                items->setItem(row, 0, date);
-                items->setItem(row, 1, title);
-                items->setItem(row, 2, complete);
-                items->setItem(row, 3, description);
+                this->setItem(row,i);
                 row++;
             }
 
@@ -189,14 +208,7 @@ void MainWindow::OverdueSelected()
         {
             if (list[i]->getDate()< current && list[i]->getComplete()<100)
             {
-                QStandardItem* date = new QStandardItem(list[i]->getDateString());
-                QStandardItem* title = new QStandardItem(list[i]->getTitle());
-                QStandardItem* complete = new QStandardItem(list[i]->getCompleteString());
-                QStandardItem* description = new QStandardItem(list[i]->getDescription());
-                items->setItem(row, 0, date);
-                items->setItem(row, 1, title);
-                items->setItem(row, 2, complete);
-                items->setItem(row, 3, description);
+                this->setItem(row,i);
                 row++;
             }
 
@@ -208,14 +220,7 @@ void MainWindow::OverdueSelected()
         {
             if (list[i]->getDate()< current)
             {
-                QStandardItem* date = new QStandardItem(list[i]->getDateString());
-                QStandardItem* title = new QStandardItem(list[i]->getTitle());
-                QStandardItem* complete = new QStandardItem(list[i]->getCompleteString());
-                QStandardItem* description = new QStandardItem(list[i]->getDescription());
-                items->setItem(row, 0, date);
-                items->setItem(row, 1, title);
-                items->setItem(row, 2, complete);
-                items->setItem(row, 3, description);
+                this->setItem(row,i);
                 row++;
             }
 
@@ -235,14 +240,7 @@ void MainWindow::TodaySelected()
         {
             if (list[i]->getDate()== current && list[i]->getComplete()<100)
             {
-                QStandardItem* date = new QStandardItem(list[i]->getDateString());
-                QStandardItem* title = new QStandardItem(list[i]->getTitle());
-                QStandardItem* complete = new QStandardItem(list[i]->getCompleteString());
-                QStandardItem* description = new QStandardItem(list[i]->getDescription());
-                items->setItem(row, 0, date);
-                items->setItem(row, 1, title);
-                items->setItem(row, 2, complete);
-                items->setItem(row, 3, description);
+                this->setItem(row,i);
                 row++;
             }
         }
@@ -253,14 +251,7 @@ void MainWindow::TodaySelected()
         {
             if (list[i]->getDate()== current)
             {
-                QStandardItem* date = new QStandardItem(list[i]->getDateString());
-                QStandardItem* title = new QStandardItem(list[i]->getTitle());
-                QStandardItem* complete = new QStandardItem(list[i]->getCompleteString());
-                QStandardItem* description = new QStandardItem(list[i]->getDescription());
-                items->setItem(row, 0, date);
-                items->setItem(row, 1, title);
-                items->setItem(row, 2, complete);
-                items->setItem(row, 3, description);
+                this->setItem(row,i);
                 row++;
             }
         }
@@ -278,14 +269,7 @@ void MainWindow::ThisWeekSelected()
             {
                 if (list[i]->getDate().weekNumber() == current.weekNumber() && list[i]->getComplete()<100)
                 {
-                    QStandardItem* date = new QStandardItem(list[i]->getDateString());
-                    QStandardItem* title = new QStandardItem(list[i]->getTitle());
-                    QStandardItem* complete = new QStandardItem(list[i]->getCompleteString());
-                    QStandardItem* description = new QStandardItem(list[i]->getDescription());
-                    items->setItem(row, 0, date);
-                    items->setItem(row, 1, title);
-                    items->setItem(row, 2, complete);
-                    items->setItem(row, 3, description);
+                    this->setItem(row,i);
                     row++;
                 }
             }
@@ -296,18 +280,22 @@ void MainWindow::ThisWeekSelected()
             {
                 if (list[i]->getDate().weekNumber() == current.weekNumber())
                 {
-                    QStandardItem* date = new QStandardItem(list[i]->getDateString());
-                    QStandardItem* title = new QStandardItem(list[i]->getTitle());
-                    QStandardItem* complete = new QStandardItem(list[i]->getCompleteString());
-                    QStandardItem* description = new QStandardItem(list[i]->getDescription());
-                    items->setItem(row, 0, date);
-                    items->setItem(row, 1, title);
-                    items->setItem(row, 2, complete);
-                    items->setItem(row, 3, description);
+                    this->setItem(row,i);
                     row++;
                 }
             }
         }
+}
+void MainWindow::setItem(int row, int item)
+{
+    QStandardItem* date = new QStandardItem(list[item]->getDateString());
+    QStandardItem* title = new QStandardItem(list[item]->getTitle());
+    QStandardItem* complete = new QStandardItem(list[item]->getCompleteString());
+    QStandardItem* description = new QStandardItem(list[item]->getDescription());
+    items->setItem(row, 0, date);
+    items->setItem(row, 1, title);
+    items->setItem(row, 2, complete);
+    items->setItem(row, 3, description);
 }
 MainWindow::~MainWindow()
 {

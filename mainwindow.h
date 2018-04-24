@@ -39,7 +39,9 @@ public:
     QPushButton *Save;
     QList<Task*> list;
     QStandardItem* AddItem();
-
+    int SetFile(QString path);
+    void setItem(int row,int item);
+    void CreateUI();
 private slots:
     void AddButton();
     void SaveButton();

@@ -14,7 +14,7 @@ class AddEdit : public QDialog
 public:
     explicit AddEdit(QWidget *parent = 0);
     ~AddEdit();
-    test();
+    void test();
 private slots:
     void on_pushButton_clicked();
 

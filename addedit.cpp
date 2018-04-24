@@ -17,7 +17,7 @@ AddEdit::~AddEdit()
 
 void AddEdit::on_pushButton_clicked()
 {
-    qDebug() << list[0]->getComplete();
+
 }
 void AddEdit::test()
 {
