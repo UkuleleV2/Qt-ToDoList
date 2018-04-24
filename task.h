@@ -17,8 +17,10 @@ public:
     Task(QDate date_arg, QString title_arg, int complete_arg, QString description_arg);
 
     QDate getDate();
+    QString getDateString();
     QString getTitle();
     int getComplete();
+    QString getCompleteString();
     QString getDescription();
     void setDate(QDate date);
     void setTitle(QString title_arg);

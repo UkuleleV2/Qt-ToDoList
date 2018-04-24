@@ -2,7 +2,7 @@
 #define ADDEDIT_H
 
 #include <QDialog>
-
+#include "mainwindow.h"
 namespace Ui {
 class AddEdit;
 }
@@ -14,6 +14,9 @@ class AddEdit : public QDialog
 public:
     explicit AddEdit(QWidget *parent = 0);
     ~AddEdit();
+    test();
+private slots:
+    void on_pushButton_clicked();
 
 private:
     Ui::AddEdit *ui;

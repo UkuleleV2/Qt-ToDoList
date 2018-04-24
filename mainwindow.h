@@ -37,7 +37,7 @@ public:
     QHBoxLayout *bottom;
     QPushButton *Add;
     QPushButton *Save;
-    QList<Task> list;
+    QList<Task*> list;
     QStandardItem* AddItem();
 
 private slots:
@@ -48,6 +48,7 @@ private slots:
     void OverdueSelected();
     void TodaySelected();
     void ThisWeekSelected();
+    void NotCompletedCheck();
 
 };
 

@@ -11,15 +11,10 @@
 
     Task::Task(QDate date_arg, QString title_arg, int complete_arg, QString description_arg)
     {
-  /*      QString year,month,day;
         this->date = date_arg;
         this->title = title_arg;
         this->complete = complete_arg;
         this->description = description_arg;
-        year = date_arg.substring(0,4);
-        month = date_arg.substring(5,7);
-        day = date_arg.substring(8);
-        this->date = QDate.of(Integer.parseInt(year),Integer.parseInt(month),Integer.parseInt(day));*/
     }
  /*   void Task::ModifyTask(String date_arg, String title_arg, int complete_arg, String description_arg)
     {
@@ -43,6 +38,10 @@
     {
         return this->date;
     }
+    QString Task::getDateString()
+    {
+        return this->date.toString("yyyy-MM-dd");
+    }
     void Task::setDate(QDate date)
     {
         this->date = date;
@@ -60,6 +59,11 @@
     int Task::getComplete()
     {
         return this->complete;
+    }
+    QString Task::getCompleteString()
+    {
+        QString temp = QString::number(this->complete);
+        return temp;
     }
 
     void Task::setComplete(int complete_arg)
