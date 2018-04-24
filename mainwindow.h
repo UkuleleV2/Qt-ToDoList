@@ -17,6 +17,8 @@
 #include <QtDebug>
 #include <QObject>
 #include <QDate>
+#include <QMenuBar>
+#include <QMenu>
 
 class MainWindow : public QMainWindow
 {
@@ -25,6 +27,8 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
+    QMenuBar* menu;
+    QMenu* fileselect;
     QHBoxLayout *hLayout;
     QRadioButton *All;
     QRadioButton *Overdue;
@@ -33,12 +37,12 @@ public:
     QCheckBox *NotCompleted;
     QVBoxLayout *vLayout;
     QTableView *table;
-    QStandardItemModel* items;
+    QStandardItemModel *items;
     QHBoxLayout *bottom;
     QPushButton *Add;
     QPushButton *Save;
+    QPushButton *TaskSave;
     QList<Task*> list;
-    QStandardItem* AddItem();
     int SetFile(QString path);
     void setItem(int row,int item);
     void CreateUI();
@@ -52,6 +56,8 @@ private slots:
     void ThisWeekSelected();
     void NotCompletedCheck();
 
+public slots:
+    void test();
 };
 
 #endif // MAINWINDOW_H

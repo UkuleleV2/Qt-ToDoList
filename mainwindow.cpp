@@ -13,6 +13,8 @@
 #include <QtDebug>
 #include <QFile>
 #include <QList>
+#include <QMenu>
+#include <QMenuBar>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
@@ -36,27 +38,33 @@ MainWindow::MainWindow(QWidget *parent) :
     items->setHeaderData(3, Qt::Horizontal, QObject::tr("Description"));
     table->setEditTriggers(QAbstractItemView::NoEditTriggers);
     table->setSelectionBehavior(QAbstractItemView::SelectRows);
+  //  table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     table->setModel(items);
 
 
-    QItemSelectionModel *sm = table->selectionModel();
     connect(Add, SIGNAL (clicked()), this, SLOT (AddButton()));
-    connect(sm, SIGNAL(currentRowChanged(QModelIndex,QModelIndex)),
-                this, SLOT(SaveButton()));
-    connect(sm, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(EditRow(QModelIndex)));
+    connect(table,SIGNAL(doubleClicked(QModelIndex)),this,SLOT(EditRow(QModelIndex)));
     connect(All, SIGNAL (clicked()), this, SLOT (AllSelected()));
     connect(Overdue, SIGNAL (clicked()), this, SLOT (OverdueSelected()));
     connect(Today, SIGNAL (clicked()), this, SLOT (TodaySelected()));
     connect(ThisWeek, SIGNAL (clicked()), this, SLOT (ThisWeekSelected()));
     connect(NotCompleted, SIGNAL (clicked()),this, SLOT(NotCompletedCheck()));
 
-  //  all->isEnabled()
     All->click();
-//    file.close();
+//
+}
+void MainWindow::test()
+{
+    qDebug() << "echo";
 }
 void MainWindow::CreateUI()
 {
-    // Horizontal layout with 3 buttons
+    //Menu Bar
+    menu = new QMenuBar(this);
+    fileselect = new QMenu(tr("&File"), this);
+    menu->addMenu(fileselect);
+
+    // Horizontal layout with 4 buttons and checkbox
     QHBoxLayout *hLayout = new QHBoxLayout;
     All = new QRadioButton("All");
     Overdue = new QRadioButton("Overdue");
@@ -69,9 +77,10 @@ void MainWindow::CreateUI()
     hLayout->addWidget(ThisWeek);
     hLayout->addWidget(NotCompleted);
 
-    // Vertical layout
+    // creating layout
     QVBoxLayout * vLayout = new QVBoxLayout;
-
+    vLayout->setMenuBar(menu);
+    vLayout->addLayout(hLayout);
     vLayout->addWidget(table);
     bottom = new QHBoxLayout;
     Add = new QPushButton("Add");
@@ -80,17 +89,13 @@ void MainWindow::CreateUI()
     bottom->addWidget(Save);
     // Outer Layer
 
-    QVBoxLayout *mainLayout = new QVBoxLayout;
     // Add the previous two inner layouts
-    mainLayout->addLayout(hLayout);
-    mainLayout->addLayout(vLayout);
-    mainLayout->addLayout(bottom);
+    vLayout->addLayout(bottom);
     // Create a widget
-
     QWidget *window = new QWidget();
     // Set the outer layout as a main layout
     // of the widget
-    window->setLayout(mainLayout);
+    window->setLayout(vLayout);
     // Window title
     window->setWindowTitle("To Do list");
     window->show();
@@ -131,6 +136,7 @@ int MainWindow::SetFile(QString path)
         list.append(temp);
         line = in.readLine();
     }
+    file.close();
     return 0;
 }
 void MainWindow::AddButton()
@@ -145,10 +151,10 @@ void MainWindow::SaveButton()
 }
 void MainWindow::EditRow(QModelIndex d)
 {
-    qDebug() << "Edit row:";
-    qDebug() << d;
-    AddEdit* addpoint = new AddEdit(this);
+    AddEdit* addpoint = new AddEdit(d,TaskSave,this);
     addpoint->show();
+  //  Task* task = AddEdit.setTask();
+    qDebug() << addpoint->setTask()->getDescription();
 }
 void MainWindow::NotCompletedCheck()
 {
@@ -165,7 +171,6 @@ void MainWindow::AllSelected()
 {
     items->clear();
     int row = 0;
-    qDebug() << "Test:";
     if (NotCompleted->isChecked())
     {
         for (int i = 0;i<list.size();i++)
@@ -182,15 +187,7 @@ void MainWindow::AllSelected()
     {
         for (int i = 0;i<list.size();i++)
         {
-                QStandardItem* date = new QStandardItem(list[i]->getDateString());
-                QStandardItem* title = new QStandardItem(list[i]->getTitle());
-                QStandardItem* complete = new QStandardItem(list[i]->getCompleteString());
-                QStandardItem* description = new QStandardItem(list[i]->getDescription());
-                items->setItem(i, 0, date);
-                items->setItem(i, 1, title);
-                items->setItem(i, 2, complete);
-                items->setItem(i, 3, description);
-
+                this->setItem(i,i);
         }
     }
 
@@ -230,7 +227,6 @@ void MainWindow::OverdueSelected()
 }
 void MainWindow::TodaySelected()
 {
-    qDebug() << "Test:";
     items->clear();
     int row = 0;
     QDate current = QDate::currentDate();
@@ -259,7 +255,6 @@ void MainWindow::TodaySelected()
 }
 void MainWindow::ThisWeekSelected()
 {
-    qDebug() << "Test:";
         items->clear();
         int row = 0;
         QDate current = QDate::currentDate();
