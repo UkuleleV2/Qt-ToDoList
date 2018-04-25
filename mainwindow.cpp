@@ -15,6 +15,7 @@
 #include <QList>
 #include <QMenu>
 #include <QMenuBar>
+#include <QHeaderView>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
@@ -32,15 +33,15 @@ MainWindow::MainWindow(QWidget *parent) :
     }
 
     this->CreateUI();
+
+    table->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    table->setSelectionBehavior(QAbstractItemView::SelectRows);
+    table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    table->setModel(items);
     items->setHeaderData(0, Qt::Horizontal, QObject::tr("DueDate"));
     items->setHeaderData(1, Qt::Horizontal, QObject::tr("Title"));
     items->setHeaderData(2, Qt::Horizontal, QObject::tr("% complete"));
     items->setHeaderData(3, Qt::Horizontal, QObject::tr("Description"));
-    table->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    table->setSelectionBehavior(QAbstractItemView::SelectRows);
-  //  table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-    table->setModel(items);
-
 
     connect(Add, SIGNAL (clicked()), this, SLOT (AddButton()));
     connect(table,SIGNAL(doubleClicked(QModelIndex)),this,SLOT(EditRow(QModelIndex)));
@@ -147,8 +148,12 @@ void MainWindow::AddButton()
     {
         qDebug() << "test";
     }
-    list.append(addpoint->getTask());
-    this->NotCompletedCheck();
+    if (addpoint->getTask() != nullptr)
+    {
+        list.append(addpoint->getTask());
+        this->NotCompletedCheck();
+    }
+
 }
 void MainWindow::SaveButton()
 {
@@ -156,7 +161,7 @@ void MainWindow::SaveButton()
 }
 void MainWindow::EditRow(QModelIndex d)
 {
-    AddEdit* addpoint = new AddEdit(d,TaskSave,this);
+    AddEdit* addpoint = new AddEdit(d,this);
     addpoint->show();
     if (addpoint->exec())
     {
@@ -189,7 +194,6 @@ void MainWindow::AllSelected()
                 this->setItem(row,i);
                 row++;
             }
-
         }
     }
     else
@@ -199,8 +203,6 @@ void MainWindow::AllSelected()
                 this->setItem(i,i);
         }
     }
-
-
 }
 
 void MainWindow::OverdueSelected()
@@ -217,7 +219,6 @@ void MainWindow::OverdueSelected()
                 this->setItem(row,i);
                 row++;
             }
-
         }
     }
     else
@@ -229,10 +230,8 @@ void MainWindow::OverdueSelected()
                 this->setItem(row,i);
                 row++;
             }
-
         }
     }
-
 }
 void MainWindow::TodaySelected()
 {

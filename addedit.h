@@ -18,14 +18,13 @@ class AddEdit : public QDialog
 
 public:
     explicit AddEdit(QWidget *parent = 0);
-    explicit AddEdit(QModelIndex index,QPushButton *TaskSave,QWidget *parent = 0);
+    explicit AddEdit(QModelIndex index,QWidget *parent = 0);
     ~AddEdit();
     Task* getTask();
-    QString test;
     Task* task;
-    void SetItems(QModelIndex index);
 private slots:
     void on_pushButton_clicked();
+    void on_pushButton_2_clicked();
 
 private:
     Ui::AddEdit *ui;
