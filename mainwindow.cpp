@@ -141,9 +141,14 @@ int MainWindow::SetFile(QString path)
 }
 void MainWindow::AddButton()
 {
-    qDebug() << "Add button:";
     AddEdit* addpoint = new AddEdit(this);
     addpoint->show();
+    if (addpoint->exec())
+    {
+        qDebug() << "test";
+    }
+    list.append(addpoint->getTask());
+    this->NotCompletedCheck();
 }
 void MainWindow::SaveButton()
 {
@@ -153,8 +158,12 @@ void MainWindow::EditRow(QModelIndex d)
 {
     AddEdit* addpoint = new AddEdit(d,TaskSave,this);
     addpoint->show();
+    if (addpoint->exec())
+    {
+        qDebug() << "test";
+    }
   //  Task* task = AddEdit.setTask();
-    qDebug() << addpoint->setTask()->getDescription();
+    qDebug() << addpoint->getTask()->getComplete();
 }
 void MainWindow::NotCompletedCheck()
 {

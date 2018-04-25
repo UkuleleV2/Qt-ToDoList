@@ -23,6 +23,7 @@ AddEdit::AddEdit(QModelIndex index,QPushButton *TaskSave,QWidget *parent) :
     ui->description->setText(index.sibling(index.row(),3).data().toString());
     ui->date->setDate(date);
     ui->slider->setValue(index.sibling(index.row(),2).data().toInt());
+    test = "abc";
 //    MainWindow *w = qobject_cast<MainWindow*>(parent);
 //    qDebug() << w->list[0]->getComplete();
  //   TaskSave=ui->pushButton;
@@ -35,16 +36,16 @@ AddEdit::~AddEdit()
 
 void AddEdit::on_pushButton_clicked()
 {
-
+    this->close();
+ //   this->exec();
 }
 void AddEdit::SetItems(QModelIndex index)
 {
  //  qDebug() <<  index.row();
 
 }
-Task* AddEdit::setTask()
+Task* AddEdit::getTask()
 {
-    Task* task = new Task(ui->date->date(),"ui->title->text()",2,"abc");
-   // Task* task = new Task(ui->date->date(),ui->slider->value(),ui->title->text(),"abc");
+    task = new Task(ui->date->date(),ui->title->text(),ui->slider->value(),ui->description->toPlainText());
     return task;
 }

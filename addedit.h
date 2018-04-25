@@ -6,7 +6,8 @@
 #include "task.h"
 #include <QModelIndex>
 #include <QPushButton>
-#include <List>
+#include <QList>
+#include <QString>
 namespace Ui {
 class AddEdit;
 }
@@ -19,7 +20,9 @@ public:
     explicit AddEdit(QWidget *parent = 0);
     explicit AddEdit(QModelIndex index,QPushButton *TaskSave,QWidget *parent = 0);
     ~AddEdit();
-    Task* setTask();
+    Task* getTask();
+    QString test;
+    Task* task;
     void SetItems(QModelIndex index);
 private slots:
     void on_pushButton_clicked();
