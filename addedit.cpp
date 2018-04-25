@@ -14,6 +14,7 @@ AddEdit::AddEdit(QWidget *parent) :
 
     ui->setupUi(this);
     ui->slider->setRange(0,100);
+
 }
 AddEdit::AddEdit(QModelIndex index,QWidget *parent) :
     QDialog(parent),
@@ -48,7 +49,10 @@ void AddEdit::on_pushButton_clicked()
     }
 
 }
-
+void AddEdit::closeEvent(QCloseEvent *bar)
+{
+    this->on_pushButton_2_clicked();
+}
 Task* AddEdit::getTask()
 {
     return task;

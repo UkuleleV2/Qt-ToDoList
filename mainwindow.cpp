@@ -38,11 +38,11 @@ MainWindow::MainWindow(QWidget *parent) :
     table->setSelectionBehavior(QAbstractItemView::SelectRows);
     table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     table->setModel(items);
+    table->setColumnHidden(2, true);
     items->setHeaderData(0, Qt::Horizontal, QObject::tr("DueDate"));
     items->setHeaderData(1, Qt::Horizontal, QObject::tr("Title"));
     items->setHeaderData(2, Qt::Horizontal, QObject::tr("% complete"));
     items->setHeaderData(3, Qt::Horizontal, QObject::tr("Description"));
-
     connect(Add, SIGNAL (clicked()), this, SLOT (AddButton()));
     connect(table,SIGNAL(doubleClicked(QModelIndex)),this,SLOT(EditRow(QModelIndex)));
     connect(All, SIGNAL (clicked()), this, SLOT (AllSelected()));

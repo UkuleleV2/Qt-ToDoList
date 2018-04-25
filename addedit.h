@@ -8,6 +8,7 @@
 #include <QPushButton>
 #include <QList>
 #include <QString>
+#include <QCloseEvent>
 namespace Ui {
 class AddEdit;
 }
@@ -21,6 +22,7 @@ public:
     explicit AddEdit(QModelIndex index,QWidget *parent = 0);
     ~AddEdit();
     Task* getTask();
+    void closeEvent(QCloseEvent *bar);
     Task* task;
 private slots:
     void on_pushButton_clicked();
